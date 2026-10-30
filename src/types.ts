@@ -93,7 +93,6 @@ export interface DeliveryRecord {
 
 export interface RateSlab {
   minFat: number;
-  minSnf: number;
   ratePerLitre: number;
 }
 
