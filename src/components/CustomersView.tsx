@@ -10,7 +10,9 @@ import {
   History,
   X,
   ArrowDownLeft,
-  Trash2
+  Trash2,
+  RotateCcw,
+  Archive
 } from 'lucide-react';
 
 interface CustomersViewProps {
@@ -29,6 +31,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   const customers = store.getCustomers();
 
   const [search, setSearch] = useState('');
+  const [showDeleted, setShowDeleted] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedCustHistory, setSelectedCustHistory] = useState<Customer | null>(null);
 
@@ -39,6 +42,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   const [defaultRate, setDefaultRate] = useState('62.00');
   const [error, setError] = useState<string | null>(null);
 
+  const deletedCustomers = customers.filter(c => c.active === false).filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search) || c.address.toLowerCase().includes(search.toLowerCase()));
   const filteredCustomers = customers.filter(c => c.active !== false).filter(c => {
     return (
       c.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -92,6 +96,15 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
         </button>
       </div>
 
+      <div className="flex gap-2">
+        <button onClick={() => setShowDeleted(false)} className={`flex-1 py-2 rounded-xl text-xs font-bold border ${!showDeleted ? 'bg-[#167A45] text-white border-[#167A45]' : 'bg-white text-neutral-600 border-neutral-200'}`}>
+          Active Customers ({customers.filter(c => c.active !== false).length})
+        </button>
+        <button onClick={() => setShowDeleted(true)} className={`flex-1 py-2 rounded-xl text-xs font-bold border flex items-center justify-center gap-1 ${showDeleted ? 'bg-neutral-800 text-white border-neutral-800' : 'bg-white text-neutral-600 border-neutral-200'}`}>
+          <Archive className="w-3.5 h-3.5" /> Deleted ({customers.filter(c => c.active === false).length})
+        </button>
+      </div>
+
       {/* Search Input */}
       <div className="relative">
         <Search className="w-4 h-4 absolute left-3 top-3 text-neutral-400" />
@@ -106,7 +119,35 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
 
       {/* Customers List */}
       <div className="space-y-2.5">
-        {filteredCustomers.length === 0 ? (
+        {showDeleted ? (
+          deletedCustomers.length === 0 ? (
+            <div className="bg-white rounded-2xl p-8 text-center border border-neutral-200 text-neutral-500 text-xs">No deleted customers found.</div>
+          ) : deletedCustomers.map(cust => {
+            const linkedSales = store.getMilkEntries().filter(e => e.partyId === cust.id && e.entryType === 'CUSTOMER_SELL').length;
+            const linkedPayments = store.getPayments().filter(p => p.partyId === cust.id && p.paymentType === 'CUSTOMER_RECEIPT').length;
+            return (
+              <div key={cust.id} className="bg-white rounded-2xl p-4 border border-amber-200 space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-sm text-neutral-900">{cust.name}</h3>
+                    {cust.phone && <p className="text-xs text-neutral-500 mt-1">{cust.phone}</p>}
+                    {cust.address && <p className="text-xs text-neutral-500 mt-1">{cust.address}</p>}
+                    <p className="text-[10px] text-neutral-500 mt-2">Linked records: {linkedSales} sales · {linkedPayments} payments</p>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-800">Deleted</span>
+                </div>
+                <div className="flex gap-2">
+                  <button type="button" onClick={() => { if (window.confirm(`Restore ${cust.name}? Their original customer ID and linked records will be kept.`)) store.restoreCustomer(cust.id); }} className="flex-1 py-2 rounded-lg bg-[#E5F3E9] text-[#167A45] text-xs font-bold flex items-center justify-center gap-1">
+                    <RotateCcw className="w-3.5 h-3.5" /> Restore Customer
+                  </button>
+                  <button type="button" onClick={() => { if (window.confirm(`PERMANENTLY DELETE ${cust.name}? This also permanently deletes all ${linkedSales} linked sales and ${linkedPayments} linked payments. This cannot be undone.`)) store.permanentlyDeleteCustomer(cust.id); }} className="py-2 px-3 rounded-lg border border-red-200 text-red-700 text-xs font-bold flex items-center justify-center gap-1">
+                    <Trash2 className="w-3.5 h-3.5" /> Permanently Delete
+                  </button>
+                </div>
+              </div>
+            );
+          })
+        ) : filteredCustomers.length === 0 ? (
           <div className="bg-white rounded-2xl p-8 text-center border border-neutral-200 text-neutral-500 text-xs">
             No customers found matching your criteria.
           </div>
