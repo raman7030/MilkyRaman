@@ -1,18 +1,18 @@
 import { Farmer, Customer, MilkEntry, Payment, Product, Expense, Subscription, DairySettings, RateSlab } from '../types';
 
 export const DEFAULT_RATE_CHART: RateSlab[] = [
-  { minFat: 3.0, minSnf: 8.0, ratePerLitre: 34.00 },
-  { minFat: 3.2, minSnf: 8.2, ratePerLitre: 36.50 },
-  { minFat: 3.5, minSnf: 8.5, ratePerLitre: 40.00 },
-  { minFat: 3.8, minSnf: 8.5, ratePerLitre: 42.50 },
-  { minFat: 4.0, minSnf: 8.5, ratePerLitre: 44.00 },
-  { minFat: 4.5, minSnf: 8.6, ratePerLitre: 48.00 },
-  { minFat: 5.0, minSnf: 8.8, ratePerLitre: 53.00 },
-  { minFat: 5.5, minSnf: 8.8, ratePerLitre: 57.50 },
-  { minFat: 6.0, minSnf: 9.0, ratePerLitre: 62.00 },
-  { minFat: 6.5, minSnf: 9.0, ratePerLitre: 66.50 },
-  { minFat: 7.0, minSnf: 9.0, ratePerLitre: 71.00 },
-  { minFat: 7.5, minSnf: 9.2, ratePerLitre: 76.00 }
+  { minFat: 3.0, ratePerLitre: 34.00 },
+  { minFat: 3.2, ratePerLitre: 36.50 },
+  { minFat: 3.5, ratePerLitre: 40.00 },
+  { minFat: 3.8, ratePerLitre: 42.50 },
+  { minFat: 4.0, ratePerLitre: 44.00 },
+  { minFat: 4.5, ratePerLitre: 48.00 },
+  { minFat: 5.0, ratePerLitre: 53.00 },
+  { minFat: 5.5, ratePerLitre: 57.50 },
+  { minFat: 6.0, ratePerLitre: 62.00 },
+  { minFat: 6.5, ratePerLitre: 66.50 },
+  { minFat: 7.0, ratePerLitre: 71.00 },
+  { minFat: 7.5, ratePerLitre: 76.00 }
 ];
 
 export const DEFAULT_SETTINGS: DairySettings = {
