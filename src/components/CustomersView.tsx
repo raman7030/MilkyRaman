@@ -9,7 +9,8 @@ import {
   ShoppingCart,
   History,
   X,
-  ArrowDownLeft
+  ArrowDownLeft,
+  Trash2
 } from 'lucide-react';
 
 interface CustomersViewProps {
@@ -38,7 +39,7 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
   const [defaultRate, setDefaultRate] = useState('62.00');
   const [error, setError] = useState<string | null>(null);
 
-  const filteredCustomers = customers.filter(c => {
+  const filteredCustomers = customers.filter(c => c.active !== false).filter(c => {
     return (
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.phone.includes(search) ||
@@ -138,6 +139,17 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
                   </div>
 
                   <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const confirmed = window.confirm(`Delete ${cust.name} from active customers? Their sales and payment history will be retained.`);
+                        if (confirmed) store.deleteCustomer(cust.id);
+                      }}
+                      className="mb-2 inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-1 text-[10px] font-bold text-red-700 hover:bg-red-50"
+                      aria-label={`Delete customer ${cust.name}`}
+                    >
+                      <Trash2 className="w-3 h-3" /> Delete
+                    </button>
                     <span className="text-[10px] font-semibold text-neutral-500 uppercase">
                       Receivable Due
                     </span>
