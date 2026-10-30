@@ -182,9 +182,13 @@ export const CustomersView: React.FC<CustomersViewProps> = ({
                   <div className="text-right">
                     <button
                       type="button"
-                      onClick={() => {
-                        const confirmed = window.confirm(`Delete ${cust.name} from active customers? Their sales and payment history will be retained.`);
-                        if (confirmed) store.deleteCustomer(cust.id);
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        // This is a reversible soft-delete, so do not rely on
+                        // window.confirm (which may be suppressed in installed PWAs/WebViews).
+                        store.deleteCustomer(cust.id);
+                        setShowDeleted(true);
                       }}
                       className="mb-2 inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-1 text-[10px] font-bold text-red-700 hover:bg-red-50"
                       aria-label={`Delete customer ${cust.name}`}
