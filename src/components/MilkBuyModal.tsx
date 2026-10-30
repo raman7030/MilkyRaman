@@ -22,7 +22,6 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
 
   const [quantity, setQuantity] = useState('10.0');
   const [fat, setFat] = useState('3.8');
-  const [snf, setSnf] = useState('8.5');
   const [fixedRate, setFixedRate] = useState(settings.cowDefaultRate || '42.00');
   const [note, setNote] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -57,8 +56,7 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
     if (qtyNum > 0) {
       if (calcMode === 'CHART') {
         const fatNum = parseFloat(fat) || 0;
-        const snfNum = parseFloat(snf) || 0;
-        const res = MilkPricing.fromRateChart(qtyNum, { fat: fatNum, snf: snfNum }, settings.rateChart);
+        const res = MilkPricing.fromRateChart(qtyNum, { fat: fatNum }, settings.rateChart);
         calculatedRate = res.ratePerLitre;
         calculatedTotal = res.total;
       } else {
@@ -116,7 +114,7 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
         milkType,
         quantityLitres: qtyNum.toFixed(2),
         fat: calcMode === 'CHART' ? fat : null,
-        snf: calcMode === 'CHART' ? snf : null,
+        snf: null,
         ratePerLitre: calculatedRate.toFixed(2),
         totalAmount: calculatedTotal.toFixed(2),
         note: note.trim()
@@ -138,7 +136,7 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
             </div>
             <div>
               <h2 className="text-base font-bold leading-tight">Milk Buy (Procurement)</h2>
-              <p className="text-xs text-white/80">Intake from Farmer · FAT/SNF · AM/PM</p>
+              <p className="text-xs text-white/80">Intake from Farmer · FAT-based rate · AM/PM</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1 rounded-full hover:bg-white/20 transition-colors cursor-pointer">
@@ -271,7 +269,7 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
                     calcMode === 'CHART' ? 'bg-[#167A45] text-white shadow-xs' : 'text-neutral-600'
                   }`}
                 >
-                  FAT / SNF
+                  FAT Based
                 </button>
                 <button
                   type="button"
@@ -307,7 +305,7 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
 
           {/* Quality readings or Fixed Rate */}
           {calcMode === 'CHART' ? (
-            <div className="grid grid-cols-2 gap-3 bg-neutral-50 p-3.5 rounded-2xl border border-neutral-200">
+            <div className="bg-neutral-50 p-3.5 rounded-2xl border border-neutral-200">
               <div>
                 <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">FAT (%)</label>
                 <input
@@ -317,19 +315,6 @@ export const MilkBuyModal: React.FC<MilkBuyModalProps> = ({ onClose, onSuccess }
                   max="14.0"
                   value={fat}
                   onChange={e => setFat(e.target.value)}
-                  className="w-full text-sm font-semibold px-3 py-2 bg-white border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#167A45]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-neutral-700 uppercase tracking-wider mb-1">SNF (%)</label>
-                <input
-                  type="number"
-                  step="0.1"
-                  min="6.0"
-                  max="12.0"
-                  value={snf}
-                  onChange={e => setSnf(e.target.value)}
                   className="w-full text-sm font-semibold px-3 py-2 bg-white border border-neutral-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#167A45]"
                   required
                 />
