@@ -64,7 +64,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
     {
       id: 'Milk Buy',
       title: 'Milk Buy',
-      subtitle: 'Farmer collection · FAT/SNF · AM/PM',
+      subtitle: 'Farmer collection · FAT · AM/PM',
       icon: <Droplets className="w-5 h-5 text-[#167A45]" />,
       action: onOpenMilkBuy
     },
