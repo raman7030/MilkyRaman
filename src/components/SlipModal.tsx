@@ -64,7 +64,7 @@ export const SlipModal: React.FC<SlipModalProps> = ({ entry, payment, onClose })
     if (entry) {
       lines.push(`Milk Type: ${entry.milkType}`);
       lines.push(`Quantity: ${parseFloat(entry.quantityLitres).toFixed(2)} Litres`);
-      if (entry.fat) lines.push(`FAT: ${entry.fat}% | SNF: ${entry.snf || '-'}%`);
+      if (entry.fat) lines.push(`FAT: ${entry.fat}%`);
       lines.push(`Rate / Litre: ${settings.currencySymbol}${parseFloat(entry.ratePerLitre).toFixed(2)}`);
       lines.push(`*TOTAL AMOUNT: ${settings.currencySymbol}${parseFloat(entry.totalAmount).toFixed(2)}*`);
       if (entry.note) lines.push(`Note: ${entry.note}`);
