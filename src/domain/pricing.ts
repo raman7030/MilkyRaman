@@ -2,7 +2,6 @@ import { RateSlab } from '../types';
 
 export interface MilkQuality {
   fat: number;
-  snf: number;
 }
 
 export interface MilkPrice {
@@ -30,28 +29,20 @@ export const MilkPricing = {
   },
 
   /**
-   * Highest matching minimum FAT/SNF slab wins; no universal formula is assumed.
+   * The highest configured minimum FAT slab determines the procurement rate.
    */
   fromRateChart(quantityLitres: number, quality: MilkQuality, chart: RateSlab[]): MilkPrice {
     if (quality.fat < 0) throw new Error('FAT cannot be negative');
-    if (quality.snf < 0) throw new Error('SNF cannot be negative');
     if (quantityLitres <= 0) throw new Error('Quantity must be greater than zero');
 
-    const matchingSlabs = chart.filter(
-      slab => quality.fat >= slab.minFat && quality.snf >= slab.minSnf
-    );
+    const matchingSlabs = chart.filter(slab => quality.fat >= slab.minFat);
 
     if (matchingSlabs.length === 0) {
-      throw new Error('No rate chart slab matches this FAT/SNF reading');
+      throw new Error('No rate chart slab matches this FAT reading');
     }
 
-    // Sort to find max minFat, then max minSnf
-    matchingSlabs.sort((a, b) => {
-      if (b.minFat !== a.minFat) {
-        return b.minFat - a.minFat;
-      }
-      return b.minSnf - a.minSnf;
-    });
+    // Use the highest configured FAT threshold met by this reading.
+    matchingSlabs.sort((a, b) => b.minFat - a.minFat);
 
     const match = matchingSlabs[0];
     return this.fixedRate(quantityLitres, match.ratePerLitre);
