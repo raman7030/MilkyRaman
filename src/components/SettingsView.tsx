@@ -24,7 +24,6 @@ export const SettingsView: React.FC = () => {
 
   // New Slab form
   const [newMinFat, setNewMinFat] = useState('4.0');
-  const [newMinSnf, setNewMinSnf] = useState('8.5');
   const [newRate, setNewRate] = useState('44.00');
 
   const handleSaveProfile = (e: React.FormEvent) => {
@@ -37,12 +36,11 @@ export const SettingsView: React.FC = () => {
   const handleAddSlab = (e: React.FormEvent) => {
     e.preventDefault();
     const fat = parseFloat(newMinFat) || 0;
-    const snf = parseFloat(newMinSnf) || 0;
     const rate = parseFloat(newRate) || 0;
 
-    const updatedSlabs = [...formData.rateChart, { minFat: fat, minSnf: snf, ratePerLitre: rate }];
-    // Sort slabs by minFat ascending
-    updatedSlabs.sort((a, b) => a.minFat - b.minFat || a.minSnf - b.minSnf);
+    const updatedSlabs = [...formData.rateChart, { minFat: fat, ratePerLitre: rate }];
+    // Sort slabs by FAT threshold ascending
+    updatedSlabs.sort((a, b) => a.minFat - b.minFat);
 
     const updated = { ...formData, rateChart: updatedSlabs };
     setFormData(updated);
@@ -97,7 +95,7 @@ export const SettingsView: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-black text-neutral-900 tracking-tight">Dairy Settings & Rate Chart</h2>
-          <p className="text-xs text-neutral-500">Business details, FAT/SNF rate chart and data backup</p>
+          <p className="text-xs text-neutral-500">Business details, FAT rate chart and data backup</p>
         </div>
       </div>
 
@@ -206,7 +204,7 @@ export const SettingsView: React.FC = () => {
         <div className="flex items-center justify-between border-b border-neutral-100 pb-2">
           <div className="flex items-center gap-2">
             <Table className="w-4 h-4 text-[#167A45]" />
-            <h3 className="text-sm font-bold text-neutral-900">Procurement FAT / SNF Rate Chart Slabs</h3>
+            <h3 className="text-sm font-bold text-neutral-900">Procurement FAT Rate Chart</h3>
           </div>
           <span className="text-[11px] text-neutral-500 font-mono">
             {formData.rateChart.length} Slabs Configured
@@ -214,7 +212,7 @@ export const SettingsView: React.FC = () => {
         </div>
 
         <p className="text-xs text-neutral-500">
-          In accordance with pure dairy rules, the system matches the highest minimum FAT and SNF threshold to determine the procurement price.
+          The procurement rate is selected automatically from the highest FAT threshold met by the milk reading.
         </p>
 
         {/* Existing Slabs Table */}
@@ -223,7 +221,6 @@ export const SettingsView: React.FC = () => {
             <thead className="bg-[#F6F8F6] text-neutral-700 font-bold uppercase text-[10px]">
               <tr>
                 <th className="px-3 py-2">Min FAT (%)</th>
-                <th className="px-3 py-2">Min SNF (%)</th>
                 <th className="px-3 py-2">Rate / Litre ({formData.currencySymbol})</th>
                 <th className="px-3 py-2 text-right">Action</th>
               </tr>
@@ -232,7 +229,6 @@ export const SettingsView: React.FC = () => {
               {formData.rateChart.map((slab, idx) => (
                 <tr key={idx} className="hover:bg-neutral-50">
                   <td className="px-3 py-2 font-bold text-neutral-800">≥ {slab.minFat.toFixed(1)}%</td>
-                  <td className="px-3 py-2 font-bold text-neutral-800">≥ {slab.minSnf.toFixed(1)}%</td>
                   <td className="px-3 py-2 font-black text-[#167A45]">
                     {formData.currencySymbol}{slab.ratePerLitre.toFixed(2)}
                   </td>
@@ -255,7 +251,7 @@ export const SettingsView: React.FC = () => {
         {/* Add Slab Sub-Form */}
         <div className="bg-[#F6F8F6] p-3 rounded-xl border border-neutral-200">
           <h4 className="text-xs font-bold text-neutral-700 mb-2">+ Add New Rate Slab</h4>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             <div>
               <label className="text-[10px] font-semibold text-neutral-500 uppercase block mb-0.5">Min FAT</label>
               <input
@@ -263,16 +259,6 @@ export const SettingsView: React.FC = () => {
                 step="0.1"
                 value={newMinFat}
                 onChange={e => setNewMinFat(e.target.value)}
-                className="w-full text-xs px-2 py-1.5 bg-white border rounded-lg font-mono"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-semibold text-neutral-500 uppercase block mb-0.5">Min SNF</label>
-              <input
-                type="number"
-                step="0.1"
-                value={newMinSnf}
-                onChange={e => setNewMinSnf(e.target.value)}
                 className="w-full text-xs px-2 py-1.5 bg-white border rounded-lg font-mono"
               />
             </div>
