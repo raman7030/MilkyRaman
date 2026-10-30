@@ -87,7 +87,7 @@ export const ReportsView: React.FC = () => {
   // CSV Export
   const handleExportCSV = () => {
     const rows: string[][] = [
-      ['Date', 'Type', 'Party', 'Shift', 'Milk Type', 'Litres', 'FAT', 'SNF', 'Rate', 'Total Amount']
+      ['Date', 'Type', 'Party', 'Shift', 'Milk Type', 'Litres', 'FAT', 'Rate', 'Total Amount']
     ];
 
     entries.forEach(e => {
@@ -103,7 +103,6 @@ export const ReportsView: React.FC = () => {
         e.milkType,
         e.quantityLitres,
         e.fat || '',
-        e.snf || '',
         e.ratePerLitre,
         e.totalAmount
       ]);
