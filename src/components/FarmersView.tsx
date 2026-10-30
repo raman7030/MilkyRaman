@@ -10,7 +10,8 @@ import {
   History,
   X,
   Check,
-  ArrowUpRight
+  ArrowUpRight,
+  Trash2
 } from 'lucide-react';
 
 interface FarmersViewProps {
@@ -39,7 +40,7 @@ export const FarmersView: React.FC<FarmersViewProps> = ({
   const [milkType, setMilkType] = useState<'COW' | 'BUFFALO' | 'MIXED'>('COW');
   const [error, setError] = useState<string | null>(null);
 
-  const filteredFarmers = farmers.filter(f => {
+  const filteredFarmers = farmers.filter(f => f.active !== false).filter(f => {
     const matchesSearch =
       f.name.toLowerCase().includes(search.toLowerCase()) ||
       f.phone.includes(search);
@@ -154,6 +155,17 @@ export const FarmersView: React.FC<FarmersViewProps> = ({
                   </div>
 
                   <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const confirmed = window.confirm(`Delete ${farmer.name} from active farmers? Their milk purchase and payout history will be retained.`);
+                        if (confirmed) store.deleteFarmer(farmer.id);
+                      }}
+                      className="mb-2 inline-flex items-center gap-1 rounded-lg border border-red-200 px-2 py-1 text-[10px] font-bold text-red-700 hover:bg-red-50"
+                      aria-label={`Delete farmer ${farmer.name}`}
+                    >
+                      <Trash2 className="w-3 h-3" /> Delete
+                    </button>
                     <span className="text-[10px] font-semibold text-neutral-500 uppercase">
                       Payable Due
                     </span>
