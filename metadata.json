@@ -1,0 +1,8 @@
+{
+  "name": "MilkyRaman",
+  "description": "Android-first dairy business management for single-owner operations covering milk procurement with FAT/SNF rate charts, retail distribution, Khata ledgers, and delivery planning.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
