@@ -193,7 +193,7 @@ export function App() {
                 {
                   id: 'Settings',
                   title: 'Rate Chart & Dairy Settings',
-                  subtitle: 'FAT/SNF slabs, profile and backup',
+                  subtitle: 'FAT rate slabs, profile and backup',
                   icon: <Settings className="w-5 h-5 text-[#167A45]" />
                 }
               ].map(item => (
