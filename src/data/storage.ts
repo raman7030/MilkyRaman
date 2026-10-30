@@ -88,6 +88,12 @@ export const DairyStore = {
     const updated = current.map(f => (f.id === farmer.id ? farmer : f));
     saveToStorage(STORAGE_KEYS.FARMERS, updated);
   },
+  /** Soft-delete retains procurement and payout history for audit and Khata. */
+  deleteFarmer(id: string): void {
+    const current = this.getFarmers();
+    const updated = current.map(f => (f.id === id ? { ...f, active: false } : f));
+    saveToStorage(STORAGE_KEYS.FARMERS, updated);
+  },
 
   getCustomers(): Customer[] {
     return getFromStorage<Customer[]>(STORAGE_KEYS.CUSTOMERS, INITIAL_CUSTOMERS);
@@ -105,6 +111,12 @@ export const DairyStore = {
   updateCustomer(customer: Customer): void {
     const current = this.getCustomers();
     const updated = current.map(c => (c.id === customer.id ? customer : c));
+    saveToStorage(STORAGE_KEYS.CUSTOMERS, updated);
+  },
+  /** Soft-delete retains sales and receipt history for audit and Khata. */
+  deleteCustomer(id: string): void {
+    const current = this.getCustomers();
+    const updated = current.map(c => (c.id === id ? { ...c, active: false } : c));
     saveToStorage(STORAGE_KEYS.CUSTOMERS, updated);
   },
 
