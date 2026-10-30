@@ -338,7 +338,7 @@ export const FarmersView: React.FC<FarmersViewProps> = ({
                             {e.entryDate} ({e.shift}) · {parseFloat(e.quantityLitres).toFixed(2)} L {e.milkType}
                           </div>
                           <div className="text-[11px] text-neutral-500">
-                            {e.fat ? `FAT: ${e.fat}% | SNF: ${e.snf || '-'}% · ` : ''}
+                            {e.fat ? `FAT: ${e.fat}% · ` : ''}
                             Rate: {settings.currencySymbol}{e.ratePerLitre}
                           </div>
                         </div>
