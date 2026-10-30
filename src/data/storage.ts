@@ -116,8 +116,25 @@ export const DairyStore = {
   /** Soft-delete retains sales and receipt history for audit and Khata. */
   deleteCustomer(id: string): void {
     const current = this.getCustomers();
-    const updated = current.map(c => (c.id === id ? { ...c, active: false } : c));
+    const updated = current.map(c => (c.id === id ? { ...c, active: false, deletedAt: Date.now() } : c));
     saveToStorage(STORAGE_KEYS.CUSTOMERS, updated);
+  },
+  /** Restore the original customer record without changing its ID or linked ledger records. */
+  restoreCustomer(id: string): void {
+    const current = this.getCustomers();
+    const updated = current.map(c => {
+      if (c.id !== id) return c;
+      const restored = { ...c, active: true } as Customer & { deletedAt?: number };
+      delete restored.deletedAt;
+      return restored;
+    });
+    saveToStorage(STORAGE_KEYS.CUSTOMERS, updated);
+  },
+  /** Permanently remove a customer and its linked sales/payment records. */
+  permanentlyDeleteCustomer(id: string): void {
+    saveToStorage(STORAGE_KEYS.CUSTOMERS, this.getCustomers().filter(c => c.id !== id));
+    saveToStorage(STORAGE_KEYS.ENTRIES, this.getMilkEntries().filter(e => !(e.partyId === id && e.entryType === 'CUSTOMER_SELL')));
+    saveToStorage(STORAGE_KEYS.PAYMENTS, this.getPayments().filter(p => !(p.partyId === id && p.paymentType === 'CUSTOMER_RECEIPT')));
   },
 
   getMilkEntries(): MilkEntry[] {
